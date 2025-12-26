@@ -105,7 +105,6 @@ If you want the demo app to use the local build version, you need to modify `Pac
 * [libplacebo-build](https://github.com/mpvkit/libplacebo-build)
 * [libdovi-build](https://github.com/mpvkit/libdovi-build)
 * [libshaderc-build](https://github.com/mpvkit/libshaderc-build)
-* [libluajit-build](https://github.com/mpvkit/libluajit-build)
 * [libass-build](https://github.com/mpvkit/libass-build)
 * [libbluray-build](https://github.com/mpvkit/libbluray-build)
 * [libsmbclient-build](https://github.com/mpvkit/libsmbclient-build)
