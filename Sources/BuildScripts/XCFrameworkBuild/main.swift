@@ -669,7 +669,26 @@ private class BuildFFMPEG: BaseBuild {
         // ./configure --list-decoders
         "--enable-decoders",
         // ./configure --list-filters
-        "--enable-filters",
+        "--disable-filters",
+        "--enable-filter=aformat", "--enable-filter=amix", "--enable-filter=anull", "--enable-filter=aresample",
+        "--enable-filter=areverse", "--enable-filter=asetrate", "--enable-filter=atempo", "--enable-filter=atrim",
+        "--enable-filter=bwdif", "--enable-filter=delogo",
+        "--enable-filter=equalizer", "--enable-filter=estdif",
+        "--enable-filter=firequalizer", "--enable-filter=format", "--enable-filter=fps",
+        "--enable-filter=hflip", "--enable-filter=hwdownload", "--enable-filter=hwmap", "--enable-filter=hwupload",
+        "--enable-filter=idet", "--enable-filter=lenscorrection", "--enable-filter=lut*", "--enable-filter=negate", "--enable-filter=null",
+        "--enable-filter=overlay",
+        "--enable-filter=palettegen", "--enable-filter=paletteuse", "--enable-filter=pan",
+        "--enable-filter=rotate",
+        "--enable-filter=scale", "--enable-filter=setpts", "--enable-filter=superequalizer",
+        "--enable-filter=transpose", "--enable-filter=trim",
+        "--enable-filter=vflip", "--enable-filter=volume",
+        "--enable-filter=w3fdif",
+        "--enable-filter=yadif",
+        "--enable-filter=avgblur_vulkan", "--enable-filter=blend_vulkan", "--enable-filter=bwdif_vulkan",
+        "--enable-filter=chromaber_vulkan", "--enable-filter=flip_vulkan", "--enable-filter=gblur_vulkan",
+        "--enable-filter=hflip_vulkan", "--enable-filter=nlmeans_vulkan", "--enable-filter=overlay_vulkan",
+        "--enable-filter=vflip_vulkan", "--enable-filter=xfade_vulkan",
     ]
 
 }
