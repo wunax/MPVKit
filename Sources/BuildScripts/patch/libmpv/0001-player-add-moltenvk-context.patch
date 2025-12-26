@@ -61,7 +61,7 @@ new file mode 100644
 index 0000000000000000000000000000000000000000..445b907f795b24b8df80389394d4ae7b3f94c6e5
 --- /dev/null
 +++ forkDstPrefix/video/out/vulkan/context_moltenvk.m
-@@ -0,0 +1,96 @@
+@@ -0,0 +1,155 @@
 +/*
 + * This file is part of mpv.
 + *
@@ -90,7 +90,43 @@ index 0000000000000000000000000000000000000000..445b907f795b24b8df80389394d4ae7b
 +struct priv {
 +    struct mpvk_ctx vk;
 +    CAMetalLayer *layer;
++    int last_width;
++    int last_height;
 +};
++
++// Resize Vulkan swapchain from CAMetalLayer.drawableSize.
++// This is the sole authoritative pixel size on macOS.
++static bool resize_from_layer(struct ra_ctx *ctx)
++{
++    struct priv *p = ctx->priv;
++    CAMetalLayer *layer = p->layer;
++
++    if (!layer || ![layer isKindOfClass:[CAMetalLayer class]])
++        return false;
++
++    CGSize drawable = layer.drawableSize;
++    int width  = (int)lrint(drawable.width);
++    int height = (int)lrint(drawable.height);
++
++    // Metal may transiently report zero-sized drawables during resize.
++    if (width <= 0 || height <= 0)
++        return false;
++
++    // Keep mpv's VO dimensions authoritative.
++    // mpv may overwrite these during vo_reconfig.
++    if (ctx->vo->dwidth != width || ctx->vo->dheight != height) {
++        ctx->vo->dwidth  = width;
++        ctx->vo->dheight = height;
++    }
++
++    if (width == p->last_width && height == p->last_height)
++        return true;
++
++    p->last_width  = width;
++    p->last_height = height;
++
++    return ra_vk_ctx_resize(ctx, width, height);
++}
 +
 +static void moltenvk_uninit(struct ra_ctx *ctx)
 +{
@@ -114,12 +150,11 @@ index 0000000000000000000000000000000000000000..445b907f795b24b8df80389394d4ae7b
 +        goto fail;
 +
 +    p->layer = (__bridge CAMetalLayer *)(intptr_t)ctx->vo->opts->WinID;
-+    VkMetalSurfaceCreateInfoEXT info = {
-+         .sType = VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT,
-+         .pLayer = p->layer,
-+    };
 +
-+    struct ra_ctx_params params = {0};
++    VkMetalSurfaceCreateInfoEXT info = {
++        .sType  = VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT,
++        .pLayer = p->layer,
++    };
 +
 +    VkInstance inst = vk->vkinst->instance;
 +    VkResult res = vkCreateMetalSurfaceEXT(inst, &info, NULL, &vk->surface);
@@ -128,10 +163,17 @@ index 0000000000000000000000000000000000000000..445b907f795b24b8df80389394d4ae7b
 +        goto fail;
 +    }
 +
-+    if (!ra_vk_ctx_init(ctx, vk, params, VK_PRESENT_MODE_FIFO_KHR))
++    if (!ra_vk_ctx_init(ctx, vk, (struct ra_ctx_params){0},
++                        VK_PRESENT_MODE_FIFO_KHR))
 +        goto fail;
 +
++    // Force an initial resize from the Metal layer, if available.
++    p->last_width  = 0;
++    p->last_height = 0;
++    resize_from_layer(ctx);
++
 +    return true;
++
 +fail:
 +    moltenvk_uninit(ctx);
 +    return false;
@@ -139,24 +181,41 @@ index 0000000000000000000000000000000000000000..445b907f795b24b8df80389394d4ae7b
 +
 +static bool moltenvk_reconfig(struct ra_ctx *ctx)
 +{
-+    struct priv *p = ctx->priv;
-+    CGSize s = p->layer.drawableSize;
-+    ra_vk_ctx_resize(ctx, s.width, s.height);
-+    return true;
++    return resize_from_layer(ctx);
 +}
 +
-+static int moltenvk_control(struct ra_ctx *ctx, int *events, int request, void *arg)
++static int moltenvk_control(struct ra_ctx *ctx, int *events,
++                            int request, void *arg)
 +{
-+    return VO_NOTIMPL;
++    if (request != VOCTRL_CHECK_EVENTS)
++        return VO_NOTIMPL;
++
++    struct priv *p = ctx->priv;
++    CAMetalLayer *layer = p->layer;
++
++    if (!layer)
++        return VO_TRUE;
++
++    CGSize drawable = layer.drawableSize;
++    int width  = (int)lrint(drawable.width);
++    int height = (int)lrint(drawable.height);
++
++    // Signal resize only; actual swapchain resize is deferred to reconfig.
++    if (width > 0 && height > 0 &&
++        (width != p->last_width || height != p->last_height)) {
++        *events |= VO_EVENT_RESIZE;
++    }
++
++    return VO_TRUE;
 +}
 +
 +const struct ra_ctx_fns ra_ctx_vulkan_moltenvk = {
-+    .type           = "vulkan",
-+    .name           = "moltenvk",
-+    .reconfig       = moltenvk_reconfig,
-+    .control        = moltenvk_control,
-+    .init           = moltenvk_init,
-+    .uninit         = moltenvk_uninit,
++    .type     = "vulkan",
++    .name     = "moltenvk",
++    .reconfig = moltenvk_reconfig,
++    .control  = moltenvk_control,
++    .init     = moltenvk_init,
++    .uninit   = moltenvk_uninit,
 +};
 diff --git forkSrcPrefix/meson.options forkDstPrefix/meson.options
 index dae0a333ef71b75a6bb36a236de7feebd99bda40..6ed28af20a09501b4997ca81e86bb198e75327fd 100644
