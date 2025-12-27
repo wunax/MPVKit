@@ -251,37 +251,37 @@ let package = Package(
 
         .binaryTarget(
             name: "Libavcodec",
-            url: "https://github.com/mpvkit/MPVKit/releases/download/0.41.1/Libavcodec.xcframework.zip",
+            url: "https://github.com/wunax/MPVKit/releases/download/0.41.1/Libavcodec.xcframework.zip",
             checksum: "43a6e1108be1e85e2dc17bad1faee6b07c2502f8397dcec3553bc3c3b2da9fa1"
         ),
         .binaryTarget(
             name: "Libavdevice",
-            url: "https://github.com/mpvkit/MPVKit/releases/download/0.41.1/Libavdevice.xcframework.zip",
+            url: "https://github.com/wunax/MPVKit/releases/download/0.41.1/Libavdevice.xcframework.zip",
             checksum: "f533c8d8cbed1195221e9843a680d049a37b5c19a125dd9f4a1c458370a3ff5a"
         ),
         .binaryTarget(
             name: "Libavformat",
-            url: "https://github.com/mpvkit/MPVKit/releases/download/0.41.1/Libavformat.xcframework.zip",
+            url: "https://github.com/wunax/MPVKit/releases/download/0.41.1/Libavformat.xcframework.zip",
             checksum: "a23df64d7fe1048da2e8372a4c74969606f02de21d4a49323bf8e6ca71f096b5"
         ),
         .binaryTarget(
             name: "Libavfilter",
-            url: "https://github.com/mpvkit/MPVKit/releases/download/0.41.1/Libavfilter.xcframework.zip",
+            url: "https://github.com/wunax/MPVKit/releases/download/0.41.1/Libavfilter.xcframework.zip",
             checksum: "9c9f0ae01b94bb30d7b530b8fe9837f31ac905223a71e0527d5f648cafd21615"
         ),
         .binaryTarget(
             name: "Libavutil",
-            url: "https://github.com/mpvkit/MPVKit/releases/download/0.41.1/Libavutil.xcframework.zip",
+            url: "https://github.com/wunax/MPVKit/releases/download/0.41.1/Libavutil.xcframework.zip",
             checksum: "746ab07dbb285d07ba7b6b21188861d91277085c60390f58ec406e6125106d56"
         ),
         .binaryTarget(
             name: "Libswresample",
-            url: "https://github.com/mpvkit/MPVKit/releases/download/0.41.1/Libswresample.xcframework.zip",
+            url: "https://github.com/wunax/MPVKit/releases/download/0.41.1/Libswresample.xcframework.zip",
             checksum: "13fbb1c44ad2f147ce62f2d9fe7c429aed9b176fa26658a854a75560cc7fe4a4"
         ),
         .binaryTarget(
             name: "Libswscale",
-            url: "https://github.com/mpvkit/MPVKit/releases/download/0.41.1/Libswscale.xcframework.zip",
+            url: "https://github.com/wunax/MPVKit/releases/download/0.41.1/Libswscale.xcframework.zip",
             checksum: "a2d449fb4293d18ffa99cc8e55c2e11565fe1e9e639270bb48c28b8f33f814fb"
         ),
 
@@ -293,7 +293,7 @@ let package = Package(
 
         .binaryTarget(
             name: "Libmpv",
-            url: "https://github.com/mpvkit/MPVKit/releases/download/0.41.1/Libmpv.xcframework.zip",
+            url: "https://github.com/wunax/MPVKit/releases/download/0.41.1/Libmpv.xcframework.zip",
             checksum: "560919b904bae02bcbea427564ece4912767876ec1836a312c625f4551e939a9"
         ),
         //AUTO_GENERATE_TARGETS_END//
