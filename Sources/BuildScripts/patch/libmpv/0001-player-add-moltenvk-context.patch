@@ -200,7 +200,6 @@ index 0000000000000000000000000000000000000000..445b907f795b24b8df80389394d4ae7b
 +    int width  = (int)lrint(drawable.width);
 +    int height = (int)lrint(drawable.height);
 +
-+    // Signal resize only; actual swapchain resize is deferred to reconfig.
 +    if (width > 0 && height > 0 &&
 +        (width != p->last_width || height != p->last_height)) {
 +        if (!resize_from_layer(ctx))
