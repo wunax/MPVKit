@@ -95,13 +95,13 @@ index 0000000000000000000000000000000000000000..445b907f795b24b8df80389394d4ae7b
 +};
 +
 +// Resize Vulkan swapchain from CAMetalLayer.drawableSize.
-+// This is the sole authoritative pixel size on macOS.
++// This is the sole authoritative pixel size.
 +static bool resize_from_layer(struct ra_ctx *ctx)
 +{
 +    struct priv *p = ctx->priv;
 +    CAMetalLayer *layer = p->layer;
 +
-+    if (!layer || ![layer isKindOfClass:[CAMetalLayer class]])
++    if (!layer)
 +        return false;
 +
 +    CGSize drawable = layer.drawableSize;
@@ -203,6 +203,8 @@ index 0000000000000000000000000000000000000000..445b907f795b24b8df80389394d4ae7b
 +    // Signal resize only; actual swapchain resize is deferred to reconfig.
 +    if (width > 0 && height > 0 &&
 +        (width != p->last_width || height != p->last_height)) {
++        if (!resize_from_layer(ctx))
++            return VO_ERROR;
 +        *events |= VO_EVENT_RESIZE;
 +    }
 +
